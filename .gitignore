@@ -22,3 +22,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# excluding .vscode configurations and generated binaries
+.vscode
+debug
