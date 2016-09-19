@@ -35,10 +35,13 @@ func projectEulerTester() {
 		// solving sudoku puzzle (naive backtrack implementation)
 		answer := SolveSudokuPuzzle(board)
 
-		fmt.Println(answer)
-
-		// notification that i-th puzzle was solved
-		fmt.Printf("Puzzle %v solved\n", i+1)
+		// problems solving test case i-th
+		if answer == nil {
+			fmt.Printf("Problems solving puzzle %v\n", i+1)
+		} else {
+			// notification that i-th puzzle was solved
+			fmt.Printf("Puzzle %v solved\n", i+1)
+		}
 	}
 
 	// closing file
