@@ -187,12 +187,6 @@ func setDiff(a []int, b []int) []int {
 	return diff
 }
 
-// def get_possible_values(invalid_values)
-// 	# simple set difference
-// 	all_values = (1..(@board_size)).to_a()
-// 	return all_values - invalid_values
-// end
-
 // computeBoardParams computes basic params of a sudoku board
 func computeBoardParams(board []int) {
 	board = board
