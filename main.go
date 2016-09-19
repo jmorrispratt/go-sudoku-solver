@@ -40,7 +40,8 @@ func projectEulerTester() {
 			fmt.Printf("Problems solving puzzle %v\n", i+1)
 		} else {
 			// notification that i-th puzzle was solved
-			fmt.Printf("Puzzle %v solved\n", i+1)
+			fmt.Printf("Puzzle %v (Solution):\n", i+1)
+			PrintSudokuBoard(answer)
 		}
 	}
 

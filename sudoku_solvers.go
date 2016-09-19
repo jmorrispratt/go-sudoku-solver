@@ -3,7 +3,12 @@ Solver for the Sudoku puzzle
 */
 package main
 
-import "math"
+import (
+	"fmt"
+	"math"
+	"strconv"
+	"strings"
+)
 
 // --------------------------------------
 
@@ -32,6 +37,38 @@ var colLabels []int
 var sqrLabels []int
 
 // --------------------------------------
+
+//PrintSudokuBoard prints a sudoku board
+func PrintSudokuBoard(b []int) {
+	bLength := len(b)
+	dim := int(math.Sqrt(float64(bLength)))
+	blkSize := int(math.Sqrt(float64(dim)))
+
+	blkParts := make([]string, blkSize)
+	for i := range blkParts {
+		blkParts[i] = strings.Repeat("-", blkSize*2+1)
+	}
+
+	hLine := fmt.Sprintf("-%v-", strings.Join(blkParts, "+"))
+	for r := 0; r < dim; r++ {
+		if r%blkSize == 0 {
+			fmt.Println(hLine)
+		}
+
+		currLine := "| "
+		for c := 0; c < dim; c++ {
+			currLine += fmt.Sprintf("%v ", strconv.Itoa(b[r*dim+c]))
+
+			if c%blkSize == (blkSize - 1) {
+				currLine += "| "
+			}
+		}
+
+		fmt.Println(currLine)
+	}
+
+	fmt.Println(hLine)
+}
 
 //SolveSudokuPuzzle is a naive implementation (simple backtracking) of a Sudoku puzzle solver
 func SolveSudokuPuzzle(board []int) []int {
