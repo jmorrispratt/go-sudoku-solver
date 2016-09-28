@@ -8,17 +8,132 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	// cli package
+	"github.com/urfave/cli"
 )
 
 func main() {
-	// testing with project euler's sudoku set
-	projectEulerTester()
+	// building and running a cli app
+	cliApp := buildCliApp()
+	cliApp.Run(os.Args)
+}
+
+// buildCliApp configures a cli app
+func buildCliApp() (cliApp *cli.App) {
+	// creating the app
+	app := cli.NewApp()
+
+	// setting app general information
+	app.Name = "Sudoku solver"
+	app.Usage = "A Go app designed to solve Sudoku puzzles"
+
+	// setting author
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Juan Mauricio Prat",
+			Email: "jmorrispratt@gmail.com",
+		},
+	}
+
+	// setting app version
+	app.Version = "0.0.1"
+
+	// setting commands
+	app.Commands = []cli.Command{
+		{
+			Name:    "test",
+			Aliases: []string{"t"},
+			Usage:   "Tests the solver against 50 puzzles from Project Euler",
+			Action: func(c *cli.Context) error {
+				// testing with project euler's sudoku set
+				projectEulerTester()
+				return nil
+			},
+		},
+	}
+
+	// setting flags (a.k.a options)
+	var boardStr string
+	var boardPath string
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "solve, s",
+			Usage:       "Solves Sudoku puzzle with inline board provided",
+			Destination: &boardStr,
+		},
+		cli.StringFlag{
+			Name:        "solve-file, f",
+			Usage:       "Solves the Sudoku puzzle stored in `FILE`",
+			Destination: &boardPath,
+		},
+	}
+
+	// actions to perform for flags
+	app.Action = func(c *cli.Context) error {
+		// both choices are not allowed at the same time
+		if boardStr != "" && boardPath != "" {
+			fmt.Println("Only one of `solve` or `solve-file` is allowed at a time")
+		}
+
+		// at least one choice should be selected
+		if boardStr == "" && boardPath == "" {
+			fmt.Println("At least `solve` or `solve-file` should be selected")
+		}
+
+		var answer []int
+
+		// if solving inline puzzle was selected
+		if boardStr != "" {
+			// building board
+			boardInt := strToIntList(boardStr)
+
+			// validating Sudoku board
+			if boardInt != nil {
+				// solving sudoku puzzle
+				answer = SolveSudokuPuzzle(boardInt)
+			}
+		}
+
+		// solving file-stored puzzle was selected
+		if boardPath != "" {
+			// opening the file with the test cases
+			f, err := os.Open(boardPath)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+			}
+			input := bufio.NewScanner(f)
+
+			// building board
+			boardPathInt := loadTestCase(input)
+
+			// validating Sudoku board
+			if boardPathInt != nil {
+				// solving sudoku puzzle
+				answer = SolveSudokuPuzzle(boardPathInt)
+			}
+		}
+
+		// problems solving test case i-th
+		if answer == nil {
+			fmt.Printf("Problems solving supplied puzzle\n")
+		} else {
+			// notification that i-th puzzle was solved
+			fmt.Printf("Solution:\n")
+			PrintSudokuBoard(answer)
+		}
+
+		return nil
+	}
+
+	// returning the built app
+	return app
 }
 
 //projectEulerTester performs tests in all sudokus from the test file (obtained from project euler)
 func projectEulerTester() {
 	// test cases path
-	testCasesPath := "./test_cases.txt"
+	testCasesPath := "./puzzles/test_cases.txt"
 
 	// opening the file with the test cases
 	f, err := os.Open(testCasesPath)
