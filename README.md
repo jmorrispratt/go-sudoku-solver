@@ -38,16 +38,22 @@ The visualization above is licensed under the [Creative Commons Attribution-Shar
 
 ## How to use it?
 
-```go
-import "main"
+#### Usage #1
+```shell
+# tests 50 test cases from Project Euler
+$ ./solver test	
+```
 
-func main() {
-	// creating a sudoku board
-	board := []int{0, 0, 3, 0, 2, 0, 6, 0, 0, 9, 0, 0, 3, 0, 5, 0, 0, 1, 0, 0, 1, 8, 0, 6, 4, 0, 0, 0, 0, 8, 1, 0, 2, 9, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 6, 7, 0, 8, 2, 0, 0, 0, 0, 2, 6, 0, 9, 5, 0, 0, 8, 0, 0, 2, 0, 3, 0, 0, 9, 0, 0, 5, 0, 1, 0, 3, 0, 0}
+#### Usage #2
+```shell
+# solves the Sudoku supplied
+$ ./solver --solve 003020600900305001001806400008102900700000008006708200002609500800203009005010300 
+```
 
-	// solving sudoku puzzle (naive backtrack implementation)
-	answer := SolveSudokuPuzzle(board)
-}
+#### Usage #3
+```shell
+# solves the Sudoku stored in specified file
+$ ./solver --solve-file ./puzzles/test_single.txt 
 ```
 
 ## Project structure
